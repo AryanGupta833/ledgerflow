@@ -31,6 +31,10 @@ public class Payment {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    /** Optional reason when a payment transitions to FAILED. */
+    @Column(name = "failure_reason")
+    private String failureReason;
+
     /** Optimistic lock: protects against concurrent state transitions on the same payment. */
     @Version
     private long version;
@@ -47,8 +51,22 @@ public class Payment {
         this.updatedAt = this.createdAt;
     }
 
+    /**
+     * Moves this payment to the given status. Callers should validate the
+     * transition via {@link com.ledgerflow.orchestration.PaymentStateMachine}
+     * before calling this method.
+     */
     public void transitionTo(Enums.PaymentStatus next) {
         this.status = next;
+        this.updatedAt = Instant.now();
+    }
+
+    /**
+     * Transitions to FAILED with a reason explaining why.
+     */
+    public void fail(String reason) {
+        this.status = Enums.PaymentStatus.FAILED;
+        this.failureReason = reason;
         this.updatedAt = Instant.now();
     }
 
@@ -59,5 +77,6 @@ public class Payment {
     public Enums.PaymentStatus getStatus() { return status; }
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
+    public String getFailureReason() { return failureReason; }
     public long getVersion() { return version; }
 }

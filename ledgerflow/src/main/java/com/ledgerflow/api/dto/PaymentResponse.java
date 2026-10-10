@@ -11,12 +11,14 @@ public record PaymentResponse(
         long amountMinor,
         String currency,
         String status,
+        String failureReason,
         Instant createdAt,
         Instant updatedAt
 ) {
     public static PaymentResponse from(Payment p) {
         return new PaymentResponse(
                 p.getId(), p.getMerchantReference(), p.getAmountMinor(),
-                p.getCurrency(), p.getStatus().name(), p.getCreatedAt(), p.getUpdatedAt());
+                p.getCurrency(), p.getStatus().name(), p.getFailureReason(),
+                p.getCreatedAt(), p.getUpdatedAt());
     }
 }

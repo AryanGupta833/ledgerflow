@@ -27,7 +27,8 @@ public class PaymentStateMachine {
     static {
         ALLOWED.put(INITIATED, EnumSet.of(AUTHORIZED, FAILED));
         ALLOWED.put(AUTHORIZED, EnumSet.of(CAPTURED, FAILED));
-        ALLOWED.put(CAPTURED, EnumSet.of(REFUNDED));
+        ALLOWED.put(CAPTURED, EnumSet.of(SETTLED, REFUNDED, FAILED));
+        ALLOWED.put(SETTLED, EnumSet.noneOf(PaymentStatus.class));
         ALLOWED.put(FAILED, EnumSet.noneOf(PaymentStatus.class));
         ALLOWED.put(REFUNDED, EnumSet.noneOf(PaymentStatus.class));
     }
