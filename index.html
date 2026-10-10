@@ -636,6 +636,9 @@
     }
     .api-method.get { background: var(--accent-subtle); color: var(--accent); }
     .api-method.post { background: var(--gold-subtle); color: var(--gold); }
+    .api-method.delete { background: #fde8e8; color: var(--debit); }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .api-method.delete { background: #2e1a1a; } }
+    :root[data-theme="dark"] .api-method.delete { background: #2e1a1a; }
 
     .api-path {
       font-family: var(--font-mono);
@@ -926,9 +929,9 @@
   <!-- Hero -->
   <section class="hero wrapper">
     <div class="hero-text">
-      <div class="badge">Phase 1 — Financial Core</div>
+      <div class="badge">Phases 1–4 &amp; 6 — Live</div>
       <h1>Payment orchestration,<br><em>done right</em></h1>
-      <p class="lead">Idempotent API backed by a double-entry ledger. Integer money, derived balances, balanced journal entries — the machinery underneath a payment gateway, built the way real payment systems are built.</p>
+      <p class="lead">Idempotent API, double-entry ledger, saga orchestrator with Kafka, HMAC-signed webhooks, settlement reconciliation, ML fraud scoring, and an LLM ops assistant — the full machinery underneath a payment gateway.</p>
       <div class="hero-cta">
         <a href="#architecture" class="btn btn-primary">See the architecture</a>
         <a href="https://github.com/taniyanandi/ledgerflow" target="_blank" rel="noopener" class="btn btn-ghost">
@@ -1087,9 +1090,10 @@
   <!-- API -->
   <section id="api" class="section wrapper">
     <div class="section-label">API Reference</div>
-    <h2>Four endpoints, zero ambiguity</h2>
+    <h2>Fourteen endpoints, zero ambiguity</h2>
     <p class="section-intro">Every write requires an <code style="font-family: var(--font-mono); font-size: 0.88rem;">Idempotency-Key</code> header. Retries are safe by design.</p>
 
+    <h3 style="margin-top: var(--space-md); margin-bottom: var(--space-xs); font-size: 1.1rem; color: var(--muted); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">Payments &amp; Ledger</h3>
     <div class="api-endpoints">
       <div class="api-row">
         <span class="api-method post">POST</span>
@@ -1110,6 +1114,58 @@
         <span class="api-method get">GET</span>
         <span class="api-path">/v1/accounts/{code}/balance</span>
         <span class="api-note">Live, derived account balance.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top: var(--space-md); margin-bottom: var(--space-xs); font-size: 1.1rem; color: var(--muted); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">Orchestration &amp; Risk</h3>
+    <div class="api-endpoints">
+      <div class="api-row">
+        <span class="api-method post">POST</span>
+        <span class="api-path">/v1/orchestrated-payments</span>
+        <span class="api-note">Saga-based authorize → risk-check → capture flow.</span>
+      </div>
+      <div class="api-row">
+        <span class="api-method post">POST</span>
+        <span class="api-path">/v1/risk/analyze/{paymentId}</span>
+        <span class="api-note">ML fraud score with SHAP explanations.</span>
+      </div>
+      <div class="api-row">
+        <span class="api-method get">GET</span>
+        <span class="api-path">/v1/risk/explanation/{paymentId}</span>
+        <span class="api-note">Human-readable risk narrative.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top: var(--space-md); margin-bottom: var(--space-xs); font-size: 1.1rem; color: var(--muted); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">Webhooks</h3>
+    <div class="api-endpoints">
+      <div class="api-row">
+        <span class="api-method post">POST</span>
+        <span class="api-path">/v1/webhooks</span>
+        <span class="api-note">Register a webhook subscription.</span>
+      </div>
+      <div class="api-row">
+        <span class="api-method get">GET</span>
+        <span class="api-path">/v1/webhooks</span>
+        <span class="api-note">List all subscriptions.</span>
+      </div>
+      <div class="api-row">
+        <span class="api-method delete">DEL</span>
+        <span class="api-path">/v1/webhooks/{id}</span>
+        <span class="api-note">Deactivate a subscription.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top: var(--space-md); margin-bottom: var(--space-xs); font-size: 1.1rem; color: var(--muted); font-family: var(--font-body); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;">Reconciliation</h3>
+    <div class="api-endpoints">
+      <div class="api-row">
+        <span class="api-method post">POST</span>
+        <span class="api-path">/v1/reconciliation/upload</span>
+        <span class="api-note">Upload a settlement CSV and reconcile.</span>
+      </div>
+      <div class="api-row">
+        <span class="api-method get">GET</span>
+        <span class="api-path">/v1/reconciliation/runs/{runId}</span>
+        <span class="api-note">Fetch reconciliation results.</span>
       </div>
     </div>
 
@@ -1212,6 +1268,18 @@
         <div class="stack-icon">OL</div>
         <div><strong>Optimistic Locking</strong><span>@Version guards on state transitions</span></div>
       </div>
+      <div class="stack-item">
+        <div class="stack-icon">KF</div>
+        <div><strong>Apache Kafka</strong><span>Event bus with transactional outbox</span></div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">WH</div>
+        <div><strong>HMAC Webhooks</strong><span>SHA-256 signed, exponential backoff</span></div>
+      </div>
+      <div class="stack-item">
+        <div class="stack-icon">XG</div>
+        <div><strong>XGBoost</strong><span>ML fraud scoring with SHAP explanations</span></div>
+      </div>
     </div>
   </section>
 
@@ -1221,7 +1289,7 @@
   <section id="roadmap" class="section wrapper">
     <div class="section-label">Roadmap</div>
     <h2>The wider platform</h2>
-    <p class="section-intro">This repository is Phase 1 of a payment orchestration platform. Each phase adds a production concern.</p>
+    <p class="section-intro">Five of six phases are live. Each phase adds a production concern.</p>
 
     <div class="roadmap" style="margin-top: var(--space-md);">
       <div class="roadmap-item active">
@@ -1232,28 +1300,28 @@
           <span class="roadmap-tag done">Live</span>
         </div>
       </div>
-      <div class="roadmap-item">
+      <div class="roadmap-item active">
         <div class="roadmap-marker">2</div>
         <div class="roadmap-content">
           <h3>Orchestrator</h3>
           <p>Explicit state machine (INITIATED → AUTHORIZED → CAPTURED → SETTLED) with the saga pattern and compensating transactions over a Kafka event bus.</p>
-          <span class="roadmap-tag planned">Planned</span>
+          <span class="roadmap-tag done">Live</span>
         </div>
       </div>
-      <div class="roadmap-item">
+      <div class="roadmap-item active">
         <div class="roadmap-marker">3</div>
         <div class="roadmap-content">
           <h3>Webhooks + Reconciliation</h3>
-          <p>Signed outbound events with retries and a dead-letter queue. A reconciliation engine matching the ledger against settlement files.</p>
-          <span class="roadmap-tag planned">Planned</span>
+          <p>HMAC-SHA256 signed outbound events with exponential-backoff retries and dead-letter. Settlement CSV reconciliation with auto-settle on match.</p>
+          <span class="roadmap-tag done">Live</span>
         </div>
       </div>
-      <div class="roadmap-item">
+      <div class="roadmap-item active">
         <div class="roadmap-marker">4</div>
         <div class="roadmap-content">
           <h3>AI Fraud Scoring</h3>
-          <p>Gradient-boosted model (XGBoost) served at sub-50ms with SHAP explanations in the decline response — every "declined: fraud" says why.</p>
-          <span class="roadmap-tag planned">Planned</span>
+          <p>XGBoost model with SHAP explanations in the decline response — every "declined: fraud" says why. Dockerized Python scoring service.</p>
+          <span class="roadmap-tag done">Live</span>
         </div>
       </div>
       <div class="roadmap-item">
@@ -1264,12 +1332,12 @@
           <span class="roadmap-tag planned">Planned</span>
         </div>
       </div>
-      <div class="roadmap-item">
+      <div class="roadmap-item active">
         <div class="roadmap-marker">6</div>
         <div class="roadmap-content">
           <h3>LLM Ops Assistant</h3>
-          <p>Natural-language queries over the ledger and reconciliation data, powered by Spring AI with retrieval-augmented generation.</p>
-          <span class="roadmap-tag planned">Planned</span>
+          <p>Natural-language queries over payment and risk data, powered by Anthropic Claude with template-based fallback for local dev.</p>
+          <span class="roadmap-tag done">Live</span>
         </div>
       </div>
     </div>
