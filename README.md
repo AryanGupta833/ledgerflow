@@ -141,15 +141,28 @@ mvn test
 
 ## Contributing — Hacktoberfest 2026 🎃
 
-We have [good first issues](https://github.com/taniyanandi/ledgerflow/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) open — each is scoped to a single file with clear acceptance criteria:
+We have [good first issues](https://github.com/taniyanandi/ledgerflow/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) open — each is scoped, has clear acceptance criteria, and points to the exact files to change:
 
-| Issue | Stack |
-|---|---|
-| Add `GET /accounts` endpoint — list all ledger accounts | Java, Spring Boot |
-| Add `GET /payments/{id}/events` — expose Kafka audit trail | Java, REST API |
-| Add `GET /risk-decisions/{paymentId}` — expose ML fraud scores | Java, AI/ML |
-| Fix missing FK on `payment_events.payment_id` | PostgreSQL, Flyway |
-| Add connect/read timeouts to fraud scoring HTTP client | Java, resilience |
+| Issue | Stack | Difficulty |
+|---|---|---|
+| Add `GET /accounts` endpoint — list all ledger accounts | Java, Spring Boot | 🟢 Beginner |
+| Add `GET /payments/{id}/events` — expose Kafka audit trail | Java, REST API | 🟢 Beginner |
+| Add `GET /risk-decisions/{paymentId}` — expose ML fraud scores | Java, AI/ML | 🟢 Beginner |
+| Fix missing FK on `payment_events.payment_id` | PostgreSQL, Flyway | 🟢 Beginner |
+| Add connect/read timeouts to fraud scoring HTTP client | Java, resilience | 🟢 Beginner |
+| Add request validation to `OrchestratedPaymentRequest` | Java, Spring Boot | 🟢 Beginner |
+| Add pagination to `GET /v1/payments` | Java, Spring Data | 🟢 Beginner |
+| Add Kafka health check to `/actuator/health` | Java, Spring Actuator | 🟢 Beginner |
+| Add Swagger/OpenAPI annotations to all controllers | Java, Documentation | 🟢 Beginner |
+| Add webhook delivery dashboard endpoint | Java, REST API | 🟢 Beginner |
+| Validate currency against ISO 4217 codes | Java, Validation | 🟢 Beginner |
+| Create a Postman / Bruno API collection | Documentation | 🟢 Beginner |
+| Add Docker health checks to docker-compose | Docker | 🟢 Beginner |
+| Add structured logging with correlation IDs | Java, SLF4J | 🟡 Intermediate |
+| Add rate limiting to the payment API | Java, Concurrency | 🟡 Intermediate |
+| Make webhook retry/backoff configurable | Java, Spring Boot | 🟡 Intermediate |
+
+**First time contributing to open source?** Look for issues marked 🟢 Beginner — they include step-by-step instructions and point to example code already in the project. Comment on the issue to claim it before starting.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
